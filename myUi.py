@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'ui.ui'
+# Form implementation generated from reading ui file 'untitled.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -9,88 +9,65 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QPalette, QBrush, QPixmap
 from controller import controller
-from PIL import Image
-
+import subUi
+import sys
+from PyQt5.QtWidgets import QDialog,QFileDialog
+import numpy as np
+import os
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
-        Dialog.setObjectName("Dialog")
-        Dialog.resize(1049, 290)
-        self.predictButton = QtWidgets.QPushButton(Dialog)
-        self.predictButton.setGeometry(QtCore.QRect(20, 150, 111, 51))
-        self.predictButton.setObjectName("predictButton")
-        self.addButton = QtWidgets.QPushButton(Dialog)
-        self.addButton.setGeometry(QtCore.QRect(310, 200, 111, 51))
-        self.addButton.setObjectName("addButton")
-        self.nameLabel = QtWidgets.QLabel(Dialog)
-        self.nameLabel.setGeometry(QtCore.QRect(140, 170, 120, 16))
-        self.nameLabel.setObjectName("nameLabel")
-        self.probabilityLabel = QtWidgets.QLabel(Dialog)
-        self.probabilityLabel.setGeometry(QtCore.QRect(260, 170, 141, 16))
-        self.probabilityLabel.setObjectName("probabilityLabel")
-        self.nameInput = QtWidgets.QLineEdit(Dialog)
-        self.nameInput.setGeometry(QtCore.QRect(30, 210, 281, 21))
-        self.nameInput.setObjectName("nameInput")
-        self.cameraButton = QtWidgets.QPushButton(Dialog)
-        self.cameraButton.setGeometry(QtCore.QRect(20, 50, 401, 41))
-        self.cameraButton.setObjectName("cameraButton")
-        self.localButton = QtWidgets.QPushButton(Dialog)
-        self.localButton.setGeometry(QtCore.QRect(310, 100, 111, 51))
-        self.localButton.setObjectName("localButton")
-        self.localDirection = QtWidgets.QLineEdit(Dialog)
-        self.localDirection.setGeometry(QtCore.QRect(30, 110, 281, 21))
-        self.localDirection.setObjectName("localDirection")
-        self.label = QtWidgets.QLabel(Dialog)
-        self.label.setGeometry(QtCore.QRect(460, 10, 480, 270))
-        self.label.setObjectName("label")
-
-        self.retranslateUi(Dialog)
-        QtCore.QMetaObject.connectSlotsByName(Dialog)
-
+        self.Dialog=Dialog
         self.ctr=controller()
-        self.addButton.clicked.connect(self.addButtonClicked)
-        self.predictButton.clicked.connect(self.predictButtonClicked)
+        self.Dialog.setObjectName("Dialog")
+        self.Dialog.resize(215, 119)
+        self.cameraButton = QtWidgets.QPushButton(self.Dialog)
+        self.cameraButton.setGeometry(QtCore.QRect(20, 10, 181, 32))
+        self.cameraButton.setObjectName("cameraButton")
+        self.saveButton = QtWidgets.QPushButton(self.Dialog)
+        self.saveButton.setGeometry(QtCore.QRect(20, 40, 181, 32))
+        self.saveButton.setObjectName("saveButton")
+        self.loadButton = QtWidgets.QPushButton(self.Dialog)
+        self.loadButton.setGeometry(QtCore.QRect(20, 70, 181, 32))
+        self.loadButton.setObjectName("loadButton")
+
+        self.retranslateUi(self.Dialog)
+        QtCore.QMetaObject.connectSlotsByName(self.Dialog)
+
         self.cameraButton.clicked.connect(self.cameraButtonClicked)
-        self.localButton.clicked.connect(self.localButtonClicked)
-        self.addButton.setDisabled(True)
-        self.predictButton.setDisabled(True)
+        self.saveButton.clicked.connect(self.saveButtonClicked)
+        self.loadButton.clicked.connect(self.loadButtonClicked)
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.predictButton.setText(_translate("Dialog", "Predict"))
-        self.addButton.setText(_translate("Dialog", "Add image"))
-        self.nameLabel.setText(_translate("Dialog", "Name: "))
-        self.probabilityLabel.setText(_translate("Dialog", "Probability: "))
-        self.nameInput.setPlaceholderText(_translate("Dialog", "Input the name here"))
-        self.cameraButton.setText(_translate("Dialog", "Capture from camera"))
-        self.localButton.setText(_translate("Dialog", "Load image"))
-        self.localDirection.setPlaceholderText(_translate("Dialog", "Direction of local image"))
-        self.label.setText(_translate("Dialog", ""))
+        self.cameraButton.setText(_translate("Dialog", "Open camera"))
+        self.saveButton.setText(_translate("Dialog", "Save dataset"))
+        self.loadButton.setText(_translate("Dialog", "Load dataSet"))
 
-    def addButtonClicked(self):
-        self.ctr.addImg(self.nameInput.text())
-        self.predictButton.setEnabled(True)
-        self.addButton.setDisabled(True)
-    
-    def predictButtonClicked(self):
-        name,pb=self.ctr.predict()
-        self.nameLabel.setText("Name: "+name)
-        self.probabilityLabel.setText("Probability: {0}%".format(pb))
-    
+    def addButtonClicked(self,vec,label):
+        self.ctr.addImg(vec,label)
+
     def cameraButtonClicked(self):
-        img=self.ctr.getImgFromCamera()
-        self.setImg(img)
-
-    def localButtonClicked(self):
-        img=self.ctr.getLocalImg(self.localDirection.text)
-        self.setImg(img)
+        model="dist"
+        self.ctr.trainModel(model)
+        imgs,vecs=self.ctr.getImgFromCamera(model)
+        labels,ps=self.ctr.predict(vecs,model)
+        self.subWindows=[]
+        self.uis=[]
+        for i in range(0,len(vecs)):
+            subWindow = QDialog()
+            ui = subUi.Ui_Dialog()
+            ui.setupUi(subWindow,self,imgs[i],vecs[i],labels[i],ps[i])
+            subWindow.show()
+            self.subWindows.append(subWindow)
+            self.uis.append(ui)
     
-    def setImg(self,img):
-        im = Image.fromarray(img)
-        im=im.resize((self.label.width(),self.label.height()))
-        pix = im.toqpixmap()
-        self.label.setPixmap(pix)
-        self.addButton.setEnabled(True)
+    def saveButtonClicked(self):
+        direction, filetype = QFileDialog.getSaveFileName(self.Dialog,  "Choose the file",  os.getcwd(),"Npz Files (*.npz)")
+        self.ctr.save(direction)
+
+    def loadButtonClicked(self):
+        direction, filetype = QFileDialog.getOpenFileName(self.Dialog,  "Choose the file",  os.getcwd(),"Npz Files (*.npz)")
+        self.ctr.load(direction)
