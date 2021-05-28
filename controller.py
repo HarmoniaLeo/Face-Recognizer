@@ -10,8 +10,8 @@ class controller:
         self.cap=capturer()
     
     def getLocalImg(self,direction):
-        self.img,self.vec=self.cap.fromLocal(direction)
-        return self.img,self.vec
+        img,vec=self.cap.fromLocal(direction)
+        return img,vec
     
     def getModel(self,model):
         if model=="SVM":
@@ -25,7 +25,7 @@ class controller:
         return self.img,self.vec
     
     def addImg(self,vec,label):
-        self.ds.addImg(self.vec,label)
+        self.ds.addImg(np.array(vec),label)
     
     def trainModel(self,model):
         csf=self.getModel(model)
@@ -35,10 +35,12 @@ class controller:
         csf=self.getModel(model)
         labels=[]
         ps=[]
-        for v in self.vec:
+        for v in vec:
             label,p=csf.predict(v)
             labels.append(label)
             ps.append(p)
+        if len(vec)==0:
+            return ["others"],[0.0]
         return labels,ps
     
     def save(self,direction):
@@ -46,3 +48,6 @@ class controller:
     
     def load(self,direction):
         self.ds.load(direction)
+    
+    def reset(self):
+        self.ds=dataset()

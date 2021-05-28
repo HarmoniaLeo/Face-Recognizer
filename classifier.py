@@ -8,11 +8,17 @@ class svm:
 
     def train(self,ds):
         if len(np.unique(ds.y))>1:
-            self.model.fit(ds.X,ds.y)
+            X=np.array(ds.X)
+            y=np.array(ds.y)
+            self.xMean=np.mean(X,axis=0)
+            self.xVar=np.var(X,axis=0)
+            X=(X-self.xMean)/self.xVar
+            self.model.fit(X,y)
             self.trained=True
 
     def predict(self,tar):
         if self.trained:
+            tar=(tar-self.xMean)/self.xVar
             yhat_class = self.model.predict(tar[None])[0]
             yhat_prob = self.model.predict_proba(tar[None])[0]
             return yhat_class,yhat_prob
@@ -24,8 +30,10 @@ class dist:
         self.trained=False
 
     def train(self,ds):
-        self.X=ds.X
-        self.y=ds.y
+        X=np.array(ds.X)
+        y=np.array(ds.y)
+        self.X=X
+        self.y=y
         if len(self.y)>0:
             self.trained=True
     
@@ -36,12 +44,15 @@ class dist:
     def predict(self,tar):
         if self.trained:
             ds=self.cal_dist(self.X,tar)
-            print(ds,self.y)
             pre_dist=np.min(ds)
+            minarg=np.argmin(ds)
+            return self.y[minarg],pre_dist
+            '''
             if pre_dist>0.8:
                 return "others",pre_dist
             else:
                 minarg=np.argmin(ds)
                 return self.y[minarg],pre_dist
+            '''
         else:
             return "others",0.0

@@ -12,7 +12,7 @@ class capturer:
         self.sess1, self.images_placeholder, self.phase_train_placeholder, self.embeddings = build_facenet_model()
         image_size = 200
         self.minsize = 20
-        self.threshold = [0.6, 0.7, 0.7]
+        self.threshold = [0.4, 0.5, 0.5]
         self.factor = 0.709  # scale factor
         print("Creating MTcnn networks and load paramenters..")
         #########################build mtcnn########################
