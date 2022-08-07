@@ -26,7 +26,7 @@ Multi-task convolutional neural network (MTCNN) is a network proposed in *Joint 
 
 Image pyramid transforms the image scale to detect the face on different scales. Cascade CNN completes the coarse-to-fine detection of human faces. The output of the former is the input of the latter. It can quickly eliminate the areas that do not contain human faces. For the areas that may contain human faces, it can be handed over to the more complex network behind. More information can be used for further selection, which can greatly improve the selecting efficiency while ensuring the recall rate. The following figure shows three neural networks (P-Net, R-Net and O-Net) connected in MTCNN. The number of network layers of each network layer is gradually deepened, the receptive field of the input image is gradually enlarged, the feature dimension of the final output is also increasing, which means that more and more information is used.
 
-<img src="media/image-20220806091920838.png" alt="image-20220806091920838" style="zoom:50%;" />
+<img src="media/image-20220806091920838.png" alt="image-20220806091920838" width="50%" />
 
 The explanation of the three-level network is as follows:
 
@@ -56,7 +56,7 @@ FaceNet uses a deep convolutional neural network to learn the mapping and furthe
 
 The purpose of FaceNet is to embed face images into a 128-dimensional Euclidean space. In the vector space, the distance between an individual feature vector (anchor) and other feature vectors of that individual (positive) is small, and the distance from other individual feature vectors (negative) is large, as shown in the following figure.
 
-<img src="media/image-20220806092839223.png" alt="image-20220806092839223" style="zoom:50%;" />
+<img src="media/image-20220806092839223.png" alt="image-20220806092839223" width="50%" />
 
 Described using mathematical language as: $||f(x_i^a)-f(x_i^p)||_2^2+\alpha<||f(x_i^a)-f(x_i^n)||_2^2,\forall(x_i^a,x_i^p,x_i^n)\in\mathbb R^{128}$
 
@@ -82,7 +82,7 @@ MTCNN is a powerful face feature extractor. We use MTCNN to extract features of 
 
 We have created a simple UI for this project that acquires face videos from the camera, saves the features of the faces in the videos and loads the saved features. Run the `main.py` file to get a dialog box: 
 
-<img src="media/image-20220806100214930.png" alt="image-20220806100214930" style="zoom: 50%;" />
+<img src="media/image-20220806100214930.png" alt="image-20220806100214930" width="50%" />
 
 Click "Open camera" to open the camera, at this time the camera detected the face, but failed to identify the face. 
 
@@ -108,13 +108,13 @@ It can be seen that the face detection recognition system accurately identifies 
 
 We additionally tested the algorithm on the LFW (Labled Faces in the Wild) [3] face dataset, which is currently a common test set for face recognition, where the provided face images are derived from natural scenes in life, thus making recognition more difficult. Due to the effects of multiple poses, lighting, expressions, age, occlusions, etc., even the same person's photos are very different. There are 13,233 face images in LFW dataset. Each image is given the corresponding name of a person. There are 5,749 people, most of them have only one picture. The size of each image is 250X250, and most of them are color images.  
 
-<img src="media/image-20220806094614336.png" alt="image-20220806094614336" style="zoom:50%;" />
+<img src="media/image-20220806094614336.png" alt="image-20220806094614336" width="50%" />
 
 In the project directory, the `lfw_funneled` folder contains the LWF image dataset and the `model` contains the network architecture and pre-trained weights for MTCNN and FaceNet. When you need to test on the LWF dataset, you can run the `ctrUi.py` file. 
 
 We selected all datasets with more than two photos of a person in the LWF dataset, and there are 1,681 datasets that meet this condition. We extracted the datasets from the 1,681 datasets in a random form, and a pair of faces was randomly selected from each dataset, one of which was input into the data system and the other was used for the matching test to calculate the test accuracy and test time. The structure of the dataset is shown in the figure below.
 
-<img src="media/image-20220806094821317.png" alt="image-20220806094821317" style="zoom:50%;" />
+<img src="media/image-20220806094821317.png" alt="image-20220806094821317" width="50%" />
 
 In the experiment, we use $n=10,20,40,60,80,120$. For each $n$, we performed 10 experiments and recorded the accuracy and time. Subsequently, we take the average of the 10 experiments as the experimental results. The running time and accuracy tables and curves are plotted as follows.
 
@@ -128,7 +128,7 @@ In the experiment, we use $n=10,20,40,60,80,120$. For each $n$, we performed 10 
 | 100  | 0.88     | 0.086       |
 | 120  | 0.877    | 0.089       |
 
-<img src="media/image-20220806095726439.png" alt="image-20220806095726439" style="zoom:50%;" />
+<img src="media/image-20220806095726439.png" alt="image-20220806095726439" width="50%" />
 
 As shown in the figure, the average accuracy decreases as the value of $n$ increases (except for a slight increase at $n=20$). The highest accuracy at $n=20$ is 0.945, and the lowest accuracy at $n=120$ is 0.877. We speculate that the reason for this phenomenon is that because of the high dimensionality of the FaceNet feature space (128 dimensions), a small deviation will cause the feature vector of the test image to be more offset from its matching vector and close to the feature vector of other images. As $n$ increases, it is more likely to be close to other points after the bias, so the test accuracy decreases as $n$ increases.
 
