@@ -22,7 +22,7 @@ Multi-task convolutional neural network (MTCNN) is a network proposed in *Joint 
 
 
 
-<img src="media/image-20220806091839907.png" alt="image-20220806091839907" style="width=375;" />
+<img src="media/image-20220806091839907.png" alt="image-20220806091839907" width="50%" />
 
 Image pyramid transforms the image scale to detect the face on different scales. Cascade CNN completes the coarse-to-fine detection of human faces. The output of the former is the input of the latter. It can quickly eliminate the areas that do not contain human faces. For the areas that may contain human faces, it can be handed over to the more complex network behind. More information can be used for further selection, which can greatly improve the selecting efficiency while ensuring the recall rate. The following figure shows three neural networks (P-Net, R-Net and O-Net) connected in MTCNN. The number of network layers of each network layer is gradually deepened, the receptive field of the input image is gradually enlarged, the feature dimension of the final output is also increasing, which means that more and more information is used.
 
