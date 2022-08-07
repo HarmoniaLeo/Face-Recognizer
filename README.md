@@ -86,7 +86,7 @@ We have created a simple UI for this project that acquires face videos from the 
 
 Click "Open camera" to open the camera, at this time the camera detected the face, but failed to identify the face. 
 
-<img src="media/IMG_0356.JPG" alt="IMG_0356" style="zoom:40%;" />
+<img src="media/IMG_0356.JPG" alt="IMG_0356" style="zoom:25%;" />
 
 We acquire a face, name the face, and subsequently add the features of the face to the dataset. 
 
@@ -96,11 +96,11 @@ Click "Save dataset" to save the dataset in .npy format.
 
 Afterwards, we click "Load dataset" to load the saved data set to re-run the face recognition. As you can see, the face detection system can now accurately distinguish between different faces.
 
-<img src="media/IMG_0358.JPG" alt="IMG_0358" style="zoom:40%;" />
+<img src="media/IMG_0358.JPG" alt="IMG_0358" style="zoom:25%;" />
 
 In addition, the face detection recognition system is able to correctly distinguish faces if multiple faces are present in the camera at the same time. We follow the above steps to add face features to the dataset and then turn on the camera for face detection and recognition.
 
-<img src="media/IMG_0359.JPG" alt="IMG_0359" style="zoom:40%;" />
+<img src="media/IMG_0359.JPG" alt="IMG_0359" style="zoom:25%;" />
 
 It can be seen that the face detection recognition system accurately identifies all the faces. 
 
