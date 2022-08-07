@@ -116,7 +116,7 @@ We selected all datasets with more than two photos of a person in the LWF datase
 
 <img src="media/image-20220806094821317.png" alt="image-20220806094821317" style="zoom:50%;" />
 
-<img src="../../../../../media/image-20220806094837905.png" alt="image-20220806094837905" style="zoom:50%;" />
+<img src="media/image-20220806094837905.png" alt="image-20220806094837905" style="zoom:50%;" />
 
 In the experiment, we use $n=10,20,40,60,80,120$. For each $n$, we performed 10 experiments and recorded the accuracy and time. Subsequently, we take the average of the 10 experiments as the experimental results. The running time and accuracy tables and curves are plotted as follows.
 
